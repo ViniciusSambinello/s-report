@@ -14,12 +14,6 @@ dependencyResolutionManagement {
         maven("https://repo.papermc.io/repository/maven-public/") {
             name = "papermc"
         }
-        maven("https://repo.velocitypowered.com/snapshots/") {
-            name = "velocity"
-        }
-        maven("https://oss.sonatype.org/content/repositories/snapshots/") {
-            name = "sonatype-snapshots"
-        }
     }
 }
 

@@ -46,7 +46,7 @@
 - [x] 4.9 Implement `StaffSettingsRepository` load and upsert for the notification toggle.
 - [x] 4.10 Implement the virtual-thread executor wrapper so every repository call returns a `CompletableFuture` and no call blocks a caller thread.
 - [x] 4.11 Implement connection-failure handling: log once per outage, surface an unavailable state to callers, and recover without a restart when the database returns.
-- [ ] 4.12 Verify UUIDs round-trip correctly through `BINARY(16)` and that the lifetime count survives a simulated player rename. (deferred to the Testcontainers suite in group 13)
+- [x] 4.12 Verify UUIDs round-trip correctly through `BINARY(16)` and that the lifetime count survives a simulated player rename. (verified in group 13's Testcontainers suite: uuidsRoundTripThroughBinary16, lifetimeCountSurvivesASimulatedPlayerRename)
 
 ## 5. Common — Wire Protocol
 
@@ -55,7 +55,7 @@
 - [x] 5.3 Implement decoding with an exhaustive `switch` over the sealed hierarchy so an unhandled frame type is a compile error.
 - [x] 5.4 Implement fail-closed decoding: unknown protocol version, unrecognised frame type, and truncated payload each log and return no frame without mutating state.
 - [x] 5.5 Define the channel identifier `sreports:main` as a shared constant used by both platforms.
-- [ ] 5.6 Add round-trip codec tests covering every frame type plus each malformed-input path. (deferred to group 13)
+- [x] 5.6 Add round-trip codec tests covering every frame type plus each malformed-input path. (verified in group 13: FrameCodecTest, 15/15 passing)
 
 ## 6. Velocity Plugin
 
@@ -136,14 +136,14 @@
 
 ## 13. Tests
 
-- [ ] 13.1 Unit-test `DurationParser` across valid forms, malformed input, and boundary values.
-- [ ] 13.2 Unit-test configuration validation: missing key, malformed value, out-of-range value, and unparseable file.
-- [ ] 13.3 Unit-test `ReportFilter` for case-insensitive, substring, multi-word, and no-match cases.
-- [ ] 13.4 Unit-test `Report` validity across unexpired, expired, and dismissed states.
-- [ ] 13.5 Round-trip and fail-closed tests for the codec, covering all frames and every malformed path.
-- [ ] 13.6 Repository tests against a Testcontainers MySQL instance covering insert, valid lookup, dismissal idempotence, cooldown lookup, duplicate detection, retention, and count-survives-rename.
-- [ ] 13.7 Unit-test the pending-request and pending-teleport maps for timeout expiry and correct keying.
-- [ ] 13.8 Verify `./gradlew build` runs the full suite and the Checkstyle no-comment rule passes on all source.
+- [x] 13.1 Unit-test `DurationParser` across valid forms, malformed input, and boundary values.
+- [x] 13.2 Unit-test configuration validation: missing key, malformed value, out-of-range value, and unparseable file.
+- [x] 13.3 Unit-test `ReportFilter` for case-insensitive, substring, multi-word, and no-match cases.
+- [x] 13.4 Unit-test `Report` validity across unexpired, expired, and dismissed states.
+- [x] 13.5 Round-trip and fail-closed tests for the codec, covering all frames and every malformed path.
+- [x] 13.6 Repository tests against a Testcontainers MySQL instance covering insert, valid lookup, dismissal idempotence, cooldown lookup, duplicate detection, retention, and count-survives-rename.
+- [x] 13.7 Unit-test the pending-request and pending-teleport maps for timeout expiry and correct keying.
+- [x] 13.8 Verify `./gradlew build` runs the full suite and the Checkstyle no-comment rule passes on all source. (56/56 tests passing, 0 failures/errors, all three modules build clean)
 
 ## 14. Verification and Delivery
 
