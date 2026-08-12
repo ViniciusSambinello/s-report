@@ -35,27 +35,27 @@
 
 ## 4. Common — Persistence
 
-- [ ] 4.1 Add the MySQL Connector/J and HikariCP dependencies and implement the pooled `DataSource` factory from `DatabaseConfig`.
-- [ ] 4.2 Implement schema creation for `{prefix}reports`, `{prefix}report_counts`, and `{prefix}staff_settings` with the indexes defined in `design.md`, executed idempotently on first connection.
-- [ ] 4.3 Implement `ReportRepository.insert` writing the report row and incrementing `report_counts` via `INSERT ... ON DUPLICATE KEY UPDATE` in a single transaction, refreshing the stored player name.
-- [ ] 4.4 Implement `ReportRepository.findValid` returning reports where `dismissed_at IS NULL AND expires_at > now`, joined to their targets' lifetime counts.
-- [ ] 4.5 Implement `ReportRepository.dismiss` setting `dismissed_at` and `dismissed_by` only when the row is still valid, returning whether it actually changed a row so a second dismissal can be reported as unavailable.
-- [ ] 4.6 Implement `ReportRepository.lastReportInstant` returning the reporter's most recent `created_at`, backing the network-wide submission cooldown.
-- [ ] 4.7 Implement `ReportRepository.hasValidReportFrom` backing duplicate suppression for a reporter and target pair.
-- [ ] 4.8 Implement `ReportRepository.deleteOlderThan` for retention, and make a retention period of zero a no-op.
-- [ ] 4.9 Implement `StaffSettingsRepository` load and upsert for the notification toggle.
-- [ ] 4.10 Implement the virtual-thread executor wrapper so every repository call returns a `CompletableFuture` and no call blocks a caller thread.
-- [ ] 4.11 Implement connection-failure handling: log once per outage, surface an unavailable state to callers, and recover without a restart when the database returns.
-- [ ] 4.12 Verify UUIDs round-trip correctly through `BINARY(16)` and that the lifetime count survives a simulated player rename.
+- [x] 4.1 Add the MySQL Connector/J and HikariCP dependencies and implement the pooled `DataSource` factory from `DatabaseConfig`.
+- [x] 4.2 Implement schema creation for `{prefix}reports`, `{prefix}report_counts`, and `{prefix}staff_settings` with the indexes defined in `design.md`, executed idempotently on first connection.
+- [x] 4.3 Implement `ReportRepository.insert` writing the report row and incrementing `report_counts` via `INSERT ... ON DUPLICATE KEY UPDATE` in a single transaction, refreshing the stored player name.
+- [x] 4.4 Implement `ReportRepository.findValid` returning reports where `dismissed_at IS NULL AND expires_at > now`, joined to their targets' lifetime counts.
+- [x] 4.5 Implement `ReportRepository.dismiss` setting `dismissed_at` and `dismissed_by` only when the row is still valid, returning whether it actually changed a row so a second dismissal can be reported as unavailable.
+- [x] 4.6 Implement `ReportRepository.lastReportInstant` returning the reporter's most recent `created_at`, backing the network-wide submission cooldown.
+- [x] 4.7 Implement `ReportRepository.hasValidReportFrom` backing duplicate suppression for a reporter and target pair.
+- [x] 4.8 Implement `ReportRepository.deleteOlderThan` for retention, and make a retention period of zero a no-op.
+- [x] 4.9 Implement `StaffSettingsRepository` load and upsert for the notification toggle.
+- [x] 4.10 Implement the virtual-thread executor wrapper so every repository call returns a `CompletableFuture` and no call blocks a caller thread.
+- [x] 4.11 Implement connection-failure handling: log once per outage, surface an unavailable state to callers, and recover without a restart when the database returns.
+- [ ] 4.12 Verify UUIDs round-trip correctly through `BINARY(16)` and that the lifetime count survives a simulated player rename. (deferred to the Testcontainers suite in group 13)
 
 ## 5. Common — Wire Protocol
 
-- [ ] 5.1 Define the sealed `ReportFrame` interface and its record implementations for the eleven frames listed in `design.md`.
-- [ ] 5.2 Implement the codec writing `[protocolVersion][frameType][payload]` with `DataOutputStream`, encoding UUIDs as two longs and strings as UTF.
-- [ ] 5.3 Implement decoding with an exhaustive `switch` over the sealed hierarchy so an unhandled frame type is a compile error.
-- [ ] 5.4 Implement fail-closed decoding: unknown protocol version, unrecognised frame type, and truncated payload each log and return no frame without mutating state.
-- [ ] 5.5 Define the channel identifier `sreports:main` as a shared constant used by both platforms.
-- [ ] 5.6 Add round-trip codec tests covering every frame type plus each malformed-input path.
+- [x] 5.1 Define the sealed `ReportFrame` interface and its record implementations for the eleven frames listed in `design.md`.
+- [x] 5.2 Implement the codec writing `[protocolVersion][frameType][payload]` with `DataOutputStream`, encoding UUIDs as two longs and strings as UTF.
+- [x] 5.3 Implement decoding with an exhaustive `switch` over the sealed hierarchy so an unhandled frame type is a compile error.
+- [x] 5.4 Implement fail-closed decoding: unknown protocol version, unrecognised frame type, and truncated payload each log and return no frame without mutating state.
+- [x] 5.5 Define the channel identifier `sreports:main` as a shared constant used by both platforms.
+- [ ] 5.6 Add round-trip codec tests covering every frame type plus each malformed-input path. (deferred to group 13)
 
 ## 6. Velocity Plugin
 
