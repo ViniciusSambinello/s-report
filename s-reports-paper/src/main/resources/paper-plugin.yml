@@ -1,0 +1,4 @@
+name: s-reports
+version: '1.0.0'
+main: s.reports.paper.SReportsPaperPlugin
+api-version: '26.2'
