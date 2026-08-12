@@ -85,6 +85,7 @@ public final class FrameCodec {
                 out.writeUTF(f.originServer());
                 out.writeLong(f.createdAtEpochMilli());
                 out.writeLong(f.expiresAtEpochMilli());
+                out.writeLong(f.lifetimeReportCount());
             }
             case ReportFrame.ReportDismissed f -> {
                 writeUuid(out, f.reportId());
@@ -133,6 +134,7 @@ public final class FrameCodec {
                     in.readUTF(),
                     in.readUTF(),
                     in.readUTF(),
+                    in.readLong(),
                     in.readLong(),
                     in.readLong());
             case REPORT_DISMISSED -> new ReportFrame.ReportDismissed(readUuid(in), readUuid(in), in.readLong());

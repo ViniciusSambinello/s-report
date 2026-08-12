@@ -8,7 +8,7 @@ public record PermissionConfig(
         String exempt,
         String browse,
         String dismiss,
-        String notify) {
+        String notifyPermission) {
 
     public PermissionConfig {
         Objects.requireNonNull(report, "report");
@@ -16,7 +16,7 @@ public record PermissionConfig(
         Objects.requireNonNull(exempt, "exempt");
         Objects.requireNonNull(browse, "browse");
         Objects.requireNonNull(dismiss, "dismiss");
-        Objects.requireNonNull(notify, "notify");
+        Objects.requireNonNull(notifyPermission, "notifyPermission");
     }
 
     public static PermissionConfig fromSection(ConfigAccessor accessor) {

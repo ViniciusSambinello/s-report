@@ -29,7 +29,8 @@ public sealed interface ReportFrame {
             String reason,
             String originServer,
             long createdAtEpochMilli,
-            long expiresAtEpochMilli) implements ReportFrame {
+            long expiresAtEpochMilli,
+            long lifetimeReportCount) implements ReportFrame {
     }
 
     record ReportDismissed(UUID reportId, UUID dismissedBy, long dismissedAtEpochMilli) implements ReportFrame {

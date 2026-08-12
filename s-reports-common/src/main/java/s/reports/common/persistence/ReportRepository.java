@@ -62,6 +62,14 @@ public final class ReportRepository extends AbstractRepository {
         return execute(connection -> deleteOlderThanRows(connection, retentionPeriod, now));
     }
 
+    public CompletableFuture<Long> lifetimeCount(UUID targetId) {
+        return execute(connection -> queryLifetimeCount(connection, targetId));
+    }
+
+    public CompletableFuture<Optional<Report>> findById(UUID reportId) {
+        return execute(connection -> queryById(connection, reportId));
+    }
+
     private void insertReportRow(Connection connection, Report report) throws SQLException {
         final String sql = "INSERT INTO " + tableName("reports")
                 + " (report_uuid, target_uuid, target_name, reporter_uuid, reporter_name, reason, origin_server, created_at, expires_at)"
@@ -147,6 +155,28 @@ public final class ReportRepository extends AbstractRepository {
             statement.setLong(3, now.toEpochMilli());
             try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.next();
+            }
+        }
+    }
+
+    private Optional<Report> queryById(Connection connection, UUID reportId) throws SQLException {
+        final String sql = "SELECT report_uuid, target_uuid, target_name, reporter_uuid, reporter_name, reason,"
+                + " origin_server, created_at, expires_at, dismissed_at, dismissed_by"
+                + " FROM " + tableName("reports") + " WHERE report_uuid = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBytes(1, UuidBinary.toBytes(reportId));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? Optional.of(readReport(resultSet)) : Optional.empty();
+            }
+        }
+    }
+
+    private long queryLifetimeCount(Connection connection, UUID targetId) throws SQLException {
+        final String sql = "SELECT report_count FROM " + tableName("report_counts") + " WHERE player_uuid = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBytes(1, UuidBinary.toBytes(targetId));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? resultSet.getLong(1) : 0L;
             }
         }
     }

@@ -1,6 +1,8 @@
 package s.reports.common.config;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import s.reports.common.logging.LogSink;
@@ -68,6 +70,36 @@ public final class ConfigAccessor {
         final String reason = result instanceof DurationParseResult.Failure failure ? failure.reason() : "is invalid";
         logSink.warn("Key '" + key + "' " + reason + "; using default " + defaultValue);
         return defaultValue;
+    }
+
+    public List<Integer> getIntList(String key, List<Integer> defaultValue) {
+        final Object raw = data.get(key);
+        if (!(raw instanceof List<?> list)) {
+            logSink.warn("Key '" + key + "' is missing or not a list; using default " + defaultValue);
+            return defaultValue;
+        }
+        final List<Integer> values = new ArrayList<>();
+        for (final Object element : list) {
+            if (!(element instanceof Number number)) {
+                logSink.warn("Key '" + key + "' contains a non-numeric entry; using default " + defaultValue);
+                return defaultValue;
+            }
+            values.add(number.intValue());
+        }
+        return List.copyOf(values);
+    }
+
+    public List<String> getStringList(String key, List<String> defaultValue) {
+        final Object raw = data.get(key);
+        if (!(raw instanceof List<?> list)) {
+            logSink.warn("Key '" + key + "' is missing or not a list; using default " + defaultValue);
+            return defaultValue;
+        }
+        final List<String> values = new ArrayList<>();
+        for (final Object element : list) {
+            values.add(String.valueOf(element));
+        }
+        return List.copyOf(values);
     }
 
     @SuppressWarnings("unchecked")
