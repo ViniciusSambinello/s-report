@@ -128,11 +128,11 @@
 
 ## 12. Configuration Defaults
 
-- [ ] 12.1 Author the packaged Paper `config.yml` with every setting, its documented default, and an explanatory comment, using `30s` cooldown, `1h` TTL, and `90d` retention.
-- [ ] 12.2 Author the packaged Paper `menu.yml` with the default layout, entry format placeholders, and pagination controls, each commented.
-- [ ] 12.3 Author the packaged Paper `messages.yml` covering every message referenced by tasks 8 through 11, in English, in MiniMessage format, each commented.
-- [ ] 12.4 Author the packaged Velocity `config.yml` with database and logging settings, each commented.
-- [ ] 12.5 Cross-check that every message key referenced in code exists in `messages.yml` and that no user-facing string is hard-coded.
+- [x] 12.1 Author the packaged Paper `config.yml` with every setting, its documented default, and an explanatory comment, using `30s` cooldown, `1h` TTL, and `90d` retention.
+- [x] 12.2 Author the packaged Paper `menu.yml` with the default layout, entry format placeholders, and pagination controls, each commented.
+- [x] 12.3 Author the packaged Paper `messages.yml` covering every message referenced by tasks 8 through 11, in English, in MiniMessage format, each commented.
+- [x] 12.4 Author the packaged Velocity `config.yml` with database and logging settings, each commented.
+- [x] 12.5 Cross-check that every message key referenced in code exists in `messages.yml` and that no user-facing string is hard-coded. (grep-verified: 21/21 keys present, single MessageService call site sends any message)
 
 ## 13. Tests
 

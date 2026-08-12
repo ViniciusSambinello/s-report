@@ -1,0 +1,48 @@
+# Layout of the /reports inventory menu.
+# Slots are numbered 0 to (rows * 9 - 1), left to right, top to bottom.
+#
+# The entry name, entry lore, and the empty-state name are MiniMessage text
+# and accept these placeholders: %target%, %reporter%, %reason%, %count%,
+# %server%, %time_remaining%.
+
+# Inventory title, MiniMessage formatted.
+title: '<dark_gray>Reports</dark_gray>'
+
+# Number of rows in the menu, 1-6.
+rows: 6
+
+# Slots used for report entries, in display order.
+entry-slots: [10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34]
+
+# Item type and text for a report entry.
+entry-material: PLAYER_HEAD
+entry-name: '<white>%target%</white>'
+entry-lore:
+  - '<gray>Reported by <white>%reporter%</white></gray>'
+  - '<gray>Reason: <white>%reason%</white></gray>'
+  - '<gray>Reports: <white>%count%</white></gray>'
+  - '<gray>Server: <white>%server%</white></gray>'
+  - '<gray>Expires in: <white>%time_remaining%</white></gray>'
+  - ''
+  - '<yellow>Left-click to teleport</yellow>'
+  - '<yellow>Right-click to dismiss</yellow>'
+
+# Text shown in the %server% placeholder when the target is not online
+# anywhere on the network.
+offline-indicator: '<gray>Offline</gray>'
+
+pagination:
+  # Slot and item for the previous-page control. No item is placed there when
+  # there is no previous page.
+  previous-slot: 48
+  previous-material: ARROW
+  # Slot and item for the next-page control. No item is placed there when
+  # there is no next page.
+  next-slot: 50
+  next-material: ARROW
+
+empty-state:
+  # Slot, item, and text shown when no reports match the current view.
+  slot: 22
+  material: BARRIER
+  name: '<gray>No reports found</gray>'

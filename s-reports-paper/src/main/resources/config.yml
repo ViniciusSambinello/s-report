@@ -1,0 +1,75 @@
+# s-reports configuration.
+#
+# Duration values (cooldown, report-ttl, retention-period, reconciliation-interval,
+# resolve-timeout, pending-teleport-timeout, connection-timeout) accept a number
+# followed by one of: s (seconds), m (minutes), h (hours), d (days).
+# Examples: 30s, 45m, 1h, 90d.
+
+# The name this server is registered under on the Velocity proxy. Used to tag
+# reports with their origin server and to compare against a target's current
+# server. Must match the proxy's own name for this backend exactly.
+server-name: server
+
+database:
+  # MySQL connection settings. This database must be reachable from every
+  # backend server and from the Velocity proxy.
+  host: localhost
+  port: 3306
+  database: sreports
+  user: sreports
+  password: ''
+  # Maximum number of pooled JDBC connections this server keeps open.
+  pool-size: 10
+  # How long to wait for a new connection before giving up.
+  connection-timeout: 30s
+  # Prepended to every table name (reports, report_counts, staff_settings).
+  # Change this if multiple plugins or networks share one database.
+  table-prefix: sreports_
+
+behaviour:
+  # Minimum time a player must wait between two of their own reports,
+  # network-wide.
+  cooldown: 30s
+  # How long a filed report stays valid before it stops appearing in the menu
+  # and stops being teleportable to.
+  report-ttl: 1h
+  # How long a report is kept in storage (valid, expired, or dismissed) before
+  # the retention cleanup deletes it. Set to 0 to keep reports forever.
+  retention-period: 90d
+  # How often this server refreshes its view of valid reports from the
+  # database, on top of refreshing on enable and on the first join after the
+  # server was empty.
+  reconciliation-interval: 60s
+  # How long to wait for the proxy to resolve a report target before telling
+  # the reporter the lookup timed out.
+  resolve-timeout: 5s
+  # How long a cross-server teleport stays armed on the target's server before
+  # it is discarded, in case the transferring staff member never arrives.
+  pending-teleport-timeout: 10s
+  # Reason text shorter than this many characters is rejected.
+  reason-min-length: 4
+  # Reason text longer than this many characters is rejected.
+  reason-max-length: 256
+  # When true, a reporter cannot file a second report against the same target
+  # while their earlier report against that target is still valid.
+  duplicate-suppression: true
+  # When true, a staff member's position is recorded before a report teleport
+  # so it could be restored later.
+  return-position: true
+  # Whether a staff member who has never used /togglereport starts with
+  # notifications enabled.
+  default-notifications-enabled: true
+
+permissions:
+  # Permission required to run /report.
+  report: sreports.report
+  # Permission that exempts a player from the submission cooldown.
+  cooldown-bypass: sreports.cooldown.bypass
+  # Permission that exempts a player from ever being reported.
+  exempt: sreports.exempt
+  # Permission required to run /reports and open the report menu.
+  browse: sreports.browse
+  # Permission required to dismiss a report from the menu.
+  dismiss: sreports.dismiss
+  # Permission required to receive report notifications and run /togglereport.
+  notify: sreports.notify
