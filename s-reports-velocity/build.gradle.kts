@@ -11,6 +11,8 @@ dependencies {
 
 tasks.shadowJar {
     archiveClassifier.set("")
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    mergeServiceFiles()
     relocate("com.zaxxer.hikari", "s.reports.shade.hikari")
     relocate("com.mysql", "s.reports.shade.mysql")
     relocate("org.yaml.snakeyaml", "s.reports.shade.snakeyaml")

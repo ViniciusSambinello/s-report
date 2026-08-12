@@ -1,5 +1,6 @@
 package s.reports.common.persistence;
 
+import com.mysql.cj.jdbc.Driver;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import s.reports.common.config.DatabaseConfig;
@@ -12,6 +13,7 @@ public final class DataSourceFactory {
     public static HikariDataSource create(DatabaseConfig config) {
         final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.jdbcUrl());
+        hikariConfig.setDriverClassName(Driver.class.getName());
         hikariConfig.setUsername(config.user());
         hikariConfig.setPassword(config.password());
         hikariConfig.setMaximumPoolSize(config.poolSize());
