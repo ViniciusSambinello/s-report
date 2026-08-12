@@ -72,59 +72,59 @@
 
 ## 7. Paper Plugin — Bootstrap
 
-- [ ] 7.1 Create `paper-plugin.yml` targeting the Paper 26.2 API and the plugin main class.
-- [ ] 7.2 Load `config.yml`, `menu.yml`, and `messages.yml` on enable, writing packaged defaults when absent.
-- [ ] 7.3 Open the Paper-side MySQL pool, run schema creation, and disable report functionality with a clear log message if configuration failed to parse.
-- [ ] 7.4 Register the `sreports:main` incoming and outgoing channels and the frame dispatcher, ignoring frames that did not arrive from the proxy.
-- [ ] 7.5 Implement the MiniMessage-backed message service resolving keys from `messages.yml`, substituting placeholders, and sending nothing when a message is configured as empty.
-- [ ] 7.6 Wire the reconciliation trigger on enable, on the first player joining an otherwise empty server, and on the configured interval.
-- [ ] 7.7 Implement the in-memory valid-report cache updated by broadcasts and replaced wholesale by reconciliation.
+- [x] 7.1 Create `paper-plugin.yml` targeting the Paper 26.2 API and the plugin main class.
+- [x] 7.2 Load `config.yml`, `menu.yml`, and `messages.yml` on enable, writing packaged defaults when absent. (packaged default resources themselves are authored in group 12)
+- [x] 7.3 Open the Paper-side MySQL pool, run schema creation, and disable report functionality with a clear log message if configuration failed to parse.
+- [x] 7.4 Register the `sreports:main` incoming and outgoing channels and the frame dispatcher, ignoring frames that did not arrive from the proxy. (see note below)
+- [x] 7.5 Implement the MiniMessage-backed message service resolving keys from `messages.yml`, substituting placeholders, and sending nothing when a message is configured as empty.
+- [x] 7.6 Wire the reconciliation trigger on enable, on the first player joining an otherwise empty server, and on the configured interval.
+- [x] 7.7 Implement the in-memory valid-report cache updated by broadcasts and replaced wholesale by reconciliation.
 
 ## 8. Paper Plugin — Report Submission
 
-- [ ] 8.1 Register `/report <target> <reason>` through the Brigadier `COMMANDS` lifecycle with a player-name suggestion argument and a greedy-string reason.
-- [ ] 8.2 Implement permission gating and the usage path for a missing or whitespace-only reason.
-- [ ] 8.3 Implement reason length validation against the configured minimum and maximum, with the length included in the rejection message.
-- [ ] 8.4 Implement the cooldown check from `lastReportInstant`, including remaining-time substitution, the cooldown-bypass permission, and the guarantee that a rejected submission never starts the cooldown.
-- [ ] 8.5 Send `TargetResolveRequest` and track the pending request by request id with the configured resolve timeout and its timeout message.
-- [ ] 8.6 Handle `TargetResolveResponse`: reject not-found, self, and exempt targets with their configured messages.
-- [ ] 8.7 Implement duplicate suppression when enabled, allowing a repeat once the earlier report was dismissed or expired.
-- [ ] 8.8 Persist the accepted report, compute expiry from the configured TTL, then send `ReportCreated` to the proxy and confirm to the reporter.
-- [ ] 8.9 Implement the storage-unavailable path so a submission is rejected with a clear message and logged rather than silently dropped.
+- [x] 8.1 Register `/report <target> <reason>` through the Brigadier `COMMANDS` lifecycle with a player-name suggestion argument and a greedy-string reason.
+- [x] 8.2 Implement permission gating and the usage path for a missing or whitespace-only reason.
+- [x] 8.3 Implement reason length validation against the configured minimum and maximum, with the length included in the rejection message.
+- [x] 8.4 Implement the cooldown check from `lastReportInstant`, including remaining-time substitution, the cooldown-bypass permission, and the guarantee that a rejected submission never starts the cooldown.
+- [x] 8.5 Send `TargetResolveRequest` and track the pending request by request id with the configured resolve timeout and its timeout message.
+- [x] 8.6 Handle `TargetResolveResponse`: reject not-found, self, and exempt targets with their configured messages.
+- [x] 8.7 Implement duplicate suppression when enabled, allowing a repeat once the earlier report was dismissed or expired.
+- [x] 8.8 Persist the accepted report, compute expiry from the configured TTL, then send `ReportCreated` to the proxy and confirm to the reporter.
+- [x] 8.9 Implement the storage-unavailable path so a submission is rejected with a clear message and logged rather than silently dropped.
 
 ## 9. Paper Plugin — Notifications
 
-- [ ] 9.1 On `ReportCreated`, deliver the notification to local players who hold the notify permission and have notifications enabled, excluding the reporter.
-- [ ] 9.2 Render the notification from `messages.yml` with target, reporter, reason, and origin server placeholders substituted.
-- [ ] 9.3 Add the clickable teleport component with its hover description, backed by a permission-gated hidden command that resolves the report id.
-- [ ] 9.4 Register `/togglereport`, gate it on the notify permission, flip and persist the setting, and confirm the resulting state.
-- [ ] 9.5 Load staff settings on join into a local cache, applying the configured default for a player who has never toggled.
-- [ ] 9.6 Verify the setting persists across a reconnect and applies on every backend server.
+- [x] 9.1 On `ReportCreated`, deliver the notification to local players who hold the notify permission and have notifications enabled, excluding the reporter.
+- [x] 9.2 Render the notification from `messages.yml` with target, reporter, reason, and origin server placeholders substituted.
+- [x] 9.3 Add the clickable teleport component with its hover description, backed by a permission-gated hidden command that resolves the report id.
+- [x] 9.4 Register `/togglereport`, gate it on the notify permission, flip and persist the setting, and confirm the resulting state.
+- [x] 9.5 Load staff settings on join into a local cache, applying the configured default for a player who has never toggled.
+- [ ] 9.6 Verify the setting persists across a reconnect and applies on every backend server. (mechanism implemented; live verification deferred to 14.5/14.6)
 
 ## 10. Paper Plugin — Report Menu
 
-- [ ] 10.1 Implement the custom `InventoryHolder` used as the menu identity marker.
-- [ ] 10.2 Register `/reports` and `/reports <keyword>` as one Brigadier command with an optional greedy-string argument, gated on the browse permission.
-- [ ] 10.3 Build the menu from `menu.yml`: title, rows, entry slots, entry material, pagination control slots and materials, and the empty-state entry.
-- [ ] 10.4 Render each entry with target name, reporter name, reason, lifetime report count, resolved current server, and time remaining, substituting the offline indicator when the target is not online.
-- [ ] 10.5 Implement pagination with next and previous controls that are only actionable when a page exists in that direction, preserving the active keyword filter.
-- [ ] 10.6 Apply keyword filtering through `ReportFilter` and show the empty-state entry when nothing matches.
-- [ ] 10.7 Cancel every click on the menu unconditionally before dispatching on `ClickType`.
-- [ ] 10.8 Implement left-click: revalidate the report, close the menu, and start the teleport flow.
-- [ ] 10.9 Implement right-click: gate on the dismiss permission, dismiss through the repository, report the already-dismissed case as unavailable, refresh the open menu in place, and broadcast `ReportDismissed`.
-- [ ] 10.10 Implement the invalid-slot fallback: log the offending slot and use the default layout rather than failing to enable.
-- [ ] 10.11 Implement the storage-unavailable path for opening the menu without crashing the server.
+- [x] 10.1 Implement the custom `InventoryHolder` used as the menu identity marker.
+- [x] 10.2 Register `/reports` and `/reports <keyword>` as one Brigadier command with an optional greedy-string argument, gated on the browse permission.
+- [x] 10.3 Build the menu from `menu.yml`: title, rows, entry slots, entry material, pagination control slots and materials, and the empty-state entry.
+- [x] 10.4 Render each entry with target name, reporter name, reason, lifetime report count, resolved current server, and time remaining, substituting the offline indicator when the target is not online.
+- [x] 10.5 Implement pagination with next and previous controls that are only actionable when a page exists in that direction, preserving the active keyword filter.
+- [x] 10.6 Apply keyword filtering through `ReportFilter` and show the empty-state entry when nothing matches.
+- [x] 10.7 Cancel every click on the menu unconditionally before dispatching on `ClickType`.
+- [x] 10.8 Implement left-click: revalidate the report, close the menu, and start the teleport flow.
+- [x] 10.9 Implement right-click: gate on the dismiss permission, dismiss through the repository, report the already-dismissed case as unavailable, refresh the open menu in place, and broadcast `ReportDismissed`.
+- [x] 10.10 Implement the invalid-slot fallback: log the offending slot and use the default layout rather than failing to enable.
+- [x] 10.11 Implement the storage-unavailable path for opening the menu without crashing the server.
 
 ## 11. Paper Plugin — Teleport
 
-- [ ] 11.1 Send `TeleportRequest` on a teleport action from either the menu or a notification click.
-- [ ] 11.2 Handle `TeleportGrant` by teleporting to the target locally and sending the confirmation message.
-- [ ] 11.3 Handle `TeleportArm` by recording the pending teleport keyed by staff id with its expiry, before the transfer completes.
-- [ ] 11.4 On `PlayerJoinEvent`, complete a pending teleport only when it is unexpired and the target is still online on this server; otherwise send the target-moved or target-offline message.
-- [ ] 11.5 Expire pending teleports on the configured timeout so a later join does not trigger an unexpected teleport.
-- [ ] 11.6 Handle `TeleportDenied` by rendering the matching message for offline, moved, transfer-failed, and report-unavailable.
-- [ ] 11.7 Record the staff member's prior server and location before teleporting when the return-position option is enabled, and record nothing when it is disabled.
-- [ ] 11.8 Verify a report remains valid and listed for other staff after a teleport.
+- [x] 11.1 Send `TeleportRequest` on a teleport action from either the menu or a notification click.
+- [x] 11.2 Handle `TeleportGrant` by teleporting to the target locally and sending the confirmation message.
+- [x] 11.3 Handle `TeleportArm` by recording the pending teleport keyed by staff id with its expiry, before the transfer completes.
+- [x] 11.4 On `PlayerJoinEvent`, complete a pending teleport only when it is unexpired and the target is still online on this server; otherwise send the target-moved or target-offline message. (see note below on target-moved)
+- [x] 11.5 Expire pending teleports on the configured timeout so a later join does not trigger an unexpected teleport.
+- [x] 11.6 Handle `TeleportDenied` by rendering the matching message for offline, moved, transfer-failed, and report-unavailable.
+- [x] 11.7 Record the staff member's prior server and location before teleporting when the return-position option is enabled, and record nothing when it is disabled.
+- [ ] 11.8 Verify a report remains valid and listed for other staff after a teleport. (true by construction — teleport never touches report state; live verification deferred to 14.5/14.6)
 
 ## 12. Configuration Defaults
 
