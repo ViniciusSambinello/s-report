@@ -17,6 +17,9 @@ tasks.shadowJar {
     relocate("com.zaxxer.hikari", "s.reports.shade.hikari")
     relocate("com.mysql", "s.reports.shade.mysql")
     relocate("org.yaml.snakeyaml", "s.reports.shade.snakeyaml")
+    dependencies {
+        exclude(dependency("com.google.protobuf:protobuf-java"))
+    }
 }
 
 tasks.named("build") {
