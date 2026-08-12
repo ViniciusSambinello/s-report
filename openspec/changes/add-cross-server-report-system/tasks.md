@@ -59,16 +59,16 @@
 
 ## 6. Velocity Plugin
 
-- [ ] 6.1 Create the `@Plugin`-annotated main class, register the `sreports:main` channel identifier, and load `config.yml`, writing defaults on first start.
-- [ ] 6.2 Open the Velocity-side MySQL pool from `DatabaseConfig` and run schema creation.
-- [ ] 6.3 Implement the plugin message listener, rejecting frames that did not originate from a backend server connection and cancelling the event so frames never reach clients.
-- [ ] 6.4 Implement target resolution: look up the named player on the proxy roster, and on failure return `TargetResolveResponse` carrying `NOT_FOUND` to the origin server.
-- [ ] 6.5 Implement the probe hop: forward `TargetProbe` to the target's backend server and route the returned `TargetProbeResult` back to the origin server as a `TargetResolveResponse`.
-- [ ] 6.6 Implement broadcast of `ReportCreated` and `ReportDismissed` to every registered server that has at least one online player, logging servers skipped as unreachable.
-- [ ] 6.7 Implement the teleport flow: resolve the target's current server, send `TeleportArm` to that server, then issue the connection request, mapping same-server to `TeleportGrant` and failures to `TeleportDenied`.
-- [ ] 6.8 Implement `SyncRequest` handling by instructing the requesting server to reconcile.
-- [ ] 6.9 Implement the retention cleanup task on the configured interval.
-- [ ] 6.10 Verify the proxy plugin contains no report business logic and renders no player-facing text.
+- [x] 6.1 Create the `@Plugin`-annotated main class, register the `sreports:main` channel identifier, and load `config.yml`, writing defaults on first start.
+- [x] 6.2 Open the Velocity-side MySQL pool from `DatabaseConfig` and run schema creation.
+- [x] 6.3 Implement the plugin message listener, rejecting frames that did not originate from a backend server connection and cancelling the event so frames never reach clients.
+- [x] 6.4 Implement target resolution: look up the named player on the proxy roster, and on failure return `TargetResolveResponse` carrying `NOT_FOUND` to the origin server.
+- [x] 6.5 Implement the probe hop: forward `TargetProbe` to the target's backend server and route the returned `TargetProbeResult` back to the origin server as a `TargetResolveResponse`.
+- [x] 6.6 Implement broadcast of `ReportCreated` and `ReportDismissed` to every registered server that has at least one online player, logging servers skipped as unreachable.
+- [x] 6.7 Implement the teleport flow: resolve the target's current server, send `TeleportArm` to that server, then issue the connection request, mapping same-server to `TeleportGrant` and failures to `TeleportDenied`.
+- [x] 6.8 Implement `SyncRequest` handling by instructing the requesting server to reconcile.
+- [x] 6.9 Implement the retention cleanup task on the configured interval.
+- [x] 6.10 Verify the proxy plugin contains no report business logic and renders no player-facing text.
 
 ## 7. Paper Plugin — Bootstrap
 

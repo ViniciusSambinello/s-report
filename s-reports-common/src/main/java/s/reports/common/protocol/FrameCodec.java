@@ -95,6 +95,7 @@ public final class FrameCodec {
                 writeUuid(out, f.staffId());
                 writeUuid(out, f.reportId());
                 writeUuid(out, f.targetId());
+                out.writeLong(f.pendingTeleportTimeoutMillis());
             }
             case ReportFrame.TeleportArm f -> {
                 writeUuid(out, f.staffId());
@@ -135,7 +136,7 @@ public final class FrameCodec {
                     in.readLong(),
                     in.readLong());
             case REPORT_DISMISSED -> new ReportFrame.ReportDismissed(readUuid(in), readUuid(in), in.readLong());
-            case TELEPORT_REQUEST -> new ReportFrame.TeleportRequest(readUuid(in), readUuid(in), readUuid(in));
+            case TELEPORT_REQUEST -> new ReportFrame.TeleportRequest(readUuid(in), readUuid(in), readUuid(in), in.readLong());
             case TELEPORT_ARM -> new ReportFrame.TeleportArm(readUuid(in), readUuid(in), readUuid(in), in.readLong());
             case TELEPORT_GRANT -> new ReportFrame.TeleportGrant(readUuid(in), readUuid(in), readUuid(in));
             case TELEPORT_DENIED -> new ReportFrame.TeleportDenied(readUuid(in), readUuid(in), readDenyReason(in));

@@ -35,7 +35,7 @@ public sealed interface ReportFrame {
     record ReportDismissed(UUID reportId, UUID dismissedBy, long dismissedAtEpochMilli) implements ReportFrame {
     }
 
-    record TeleportRequest(UUID staffId, UUID reportId, UUID targetId) implements ReportFrame {
+    record TeleportRequest(UUID staffId, UUID reportId, UUID targetId, long pendingTeleportTimeoutMillis) implements ReportFrame {
     }
 
     record TeleportArm(UUID staffId, UUID targetId, UUID reportId, long expiresAtEpochMilli) implements ReportFrame {
