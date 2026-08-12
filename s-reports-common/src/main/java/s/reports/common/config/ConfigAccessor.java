@@ -3,13 +3,14 @@ package s.reports.common.config;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import s.reports.common.logging.LogSink;
 
 public final class ConfigAccessor {
 
     private final Map<String, Object> data;
-    private final ConfigLogSink logSink;
+    private final LogSink logSink;
 
-    public ConfigAccessor(Map<String, Object> data, ConfigLogSink logSink) {
+    public ConfigAccessor(Map<String, Object> data, LogSink logSink) {
         this.data = Objects.requireNonNull(data, "data");
         this.logSink = Objects.requireNonNull(logSink, "logSink");
     }
