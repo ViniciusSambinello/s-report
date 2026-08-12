@@ -1,7 +1,7 @@
 ## 0. Version Control
 
 - [x] 0.1 Create and switch to a git branch named `add-cross-server-report-system` from `main` before making any file changes.
-- [ ] 0.2 Commit at the end of each numbered group below (1 through 14) on that branch; do not push to a remote unless separately requested.
+- [x] 0.2 Commit at the end of each numbered group below (1 through 14) on that branch; do not push to a remote unless separately requested.
 
 ## 1. Project Scaffolding
 
