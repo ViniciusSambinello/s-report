@@ -1,0 +1,78 @@
+# Every player-facing message s-reports sends, in MiniMessage format.
+# Set a message to '' (empty) to suppress it entirely without changing the
+# underlying behaviour.
+
+# Sent when a player attempts a gated action without the required permission.
+no-permission: '<red>You do not have permission to do that.</red>'
+
+# Sent by /report when the reason is missing or only whitespace.
+usage-report: '<red>Usage: /report <player> <reason></red>'
+
+# Sent by /report when the reason is shorter than behaviour.reason-min-length.
+# Placeholder: %min%
+reason-too-short: '<red>Your reason must be at least %min% characters long.</red>'
+
+# Sent by /report when the reason is longer than behaviour.reason-max-length.
+# Placeholder: %max%
+reason-too-long: '<red>Your reason must be at most %max% characters long.</red>'
+
+# Sent by /report when the reporter is still on cooldown from a previous
+# report. Placeholder: %remaining% (seconds)
+cooldown: '<red>You must wait %remaining%s before filing another report.</red>'
+
+# Sent by /report when the proxy does not answer the target lookup in time.
+resolve-timeout: '<red>Could not verify that player in time. Please try again.</red>'
+
+# Sent by /report when the named target is not online anywhere on the network.
+target-not-found: '<red>That player could not be found.</red>'
+
+# Sent by /report when the target resolves to the reporter themselves.
+cannot-report-self: '<red>You cannot report yourself.</red>'
+
+# Sent by /report when the target holds the exempt permission.
+target-exempt: '<red>That player cannot be reported.</red>'
+
+# Sent whenever a database operation fails and the request cannot be
+# completed.
+storage-unavailable: '<red>Report storage is currently unavailable. Please try again later.</red>'
+
+# Sent by /report when duplicate-suppression is enabled and the reporter
+# already has a valid report against the same target.
+duplicate-report: '<red>You already have an open report against that player.</red>'
+
+# Sent by /report on a successful submission. Placeholder: %target%
+submission-confirmed: '<green>Your report against %target% has been submitted.</green>'
+
+# Live chat alert delivered to staff when a report is filed. The teleport
+# click and its hover text are authored directly into this MiniMessage
+# string. Placeholders: %target%, %reporter%, %reason%, %server%, %report_id%
+notification-format: '<gray>[<red>Report</red>]</gray> <hover:show_text:''<green>Click to teleport</green>''><click:run_command:''/sreportstp %report_id%''><white>%target%</white></click></hover> <gray>reported by</gray> <white>%reporter%</white> <gray>for</gray> <white>%reason%</white> <gray>on</gray> <white>%server%</white>'
+
+# Sent by /togglereport when notifications are switched off.
+notifications-disabled: '<yellow>Report notifications disabled.</yellow>'
+
+# Sent by /togglereport when notifications are switched on.
+notifications-enabled: '<yellow>Report notifications enabled.</yellow>'
+
+# Sent when a staff member successfully teleports to a report target.
+# Placeholder: %target%
+teleport-confirmed: '<green>Teleported to %target%.</green>'
+
+# Sent when a teleport cannot proceed because the target is not online
+# anywhere on the network.
+target-offline: '<red>That player is no longer online.</red>'
+
+# Sent when a cross-server teleport arrives but the target has since moved to
+# a different server.
+target-moved: '<red>That player moved to a different server. Please try again.</red>'
+
+# Sent when the proxy could not transfer the staff member to the target's
+# server.
+transfer-failed: '<red>Could not transfer you to that server. Please try again.</red>'
+
+# Sent when a teleport or dismissal targets a report that has since expired
+# or was already dismissed.
+report-unavailable: '<red>That report is no longer available.</red>'
+
+# Sent to a staff member after successfully dismissing a report.
+dismiss-confirmed: '<green>Report dismissed.</green>'
