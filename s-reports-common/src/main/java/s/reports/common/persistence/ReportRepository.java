@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import javax.sql.DataSource;
 import s.reports.common.domain.Report;
+import s.reports.common.domain.ReportFilter;
 import s.reports.common.domain.ReportView;
 
 public final class ReportRepository extends AbstractRepository {
@@ -103,20 +104,18 @@ public final class ReportRepository extends AbstractRepository {
 
     private List<ReportView> queryValid(Connection connection, Instant now) throws SQLException {
         final String sql = "SELECT r.report_uuid, r.target_uuid, r.target_name, r.reporter_uuid, r.reporter_name,"
-                + " r.reason, r.origin_server, r.created_at, r.expires_at, r.dismissed_at, r.dismissed_by,"
-                + " COALESCE(c.report_count, 0) AS lifetime_count"
+                + " r.reason, r.origin_server, r.created_at, r.expires_at, r.dismissed_at, r.dismissed_by"
                 + " FROM " + tableName("reports") + " r"
-                + " LEFT JOIN " + tableName("report_counts") + " c ON c.player_uuid = r.target_uuid"
                 + " WHERE r.dismissed_at IS NULL AND r.expires_at > ?"
                 + " ORDER BY r.created_at DESC";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, now.toEpochMilli());
             try (ResultSet resultSet = statement.executeQuery()) {
-                final List<ReportView> views = new ArrayList<>();
+                final List<Report> reports = new ArrayList<>();
                 while (resultSet.next()) {
-                    views.add(new ReportView(readReport(resultSet), resultSet.getLong("lifetime_count"), null));
+                    reports.add(readReport(resultSet));
                 }
-                return List.copyOf(views);
+                return ReportFilter.viewsWithValidCounts(reports);
             }
         }
     }

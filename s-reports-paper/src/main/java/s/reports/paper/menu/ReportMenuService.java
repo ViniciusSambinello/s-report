@@ -146,7 +146,7 @@ public final class ReportMenuService {
     private CompletableFuture<ReportView> resolveOne(Player carrier, ReportView view) {
         final Player local = Bukkit.getPlayer(view.report().targetId());
         if (local != null) {
-            return CompletableFuture.completedFuture(new ReportView(view.report(), view.lifetimeReportCount(), config.serverName()));
+            return CompletableFuture.completedFuture(new ReportView(view.report(), view.reportCount(), config.serverName()));
         }
         final UUID requestId = UUID.randomUUID();
         final CompletableFuture<ReportFrame.TargetResolveResponse> future =
@@ -156,7 +156,7 @@ public final class ReportMenuService {
             if (throwable != null || response == null || !response.found()) {
                 return view;
             }
-            return new ReportView(view.report(), view.lifetimeReportCount(), response.currentServer());
+            return new ReportView(view.report(), view.reportCount(), response.currentServer());
         });
     }
 
@@ -234,7 +234,7 @@ public final class ReportMenuService {
                 "target", view.report().targetName(),
                 "reporter", view.report().reporterName(),
                 "reason", view.report().reason(),
-                "count", String.valueOf(view.lifetimeReportCount()),
+                "count", String.valueOf(view.reportCount()),
                 "server", view.targetOnline() ? view.resolvedServer() : menuConfig.offlineIndicator(),
                 "time_remaining", formatRemaining(view.report().expiresAt()));
     }

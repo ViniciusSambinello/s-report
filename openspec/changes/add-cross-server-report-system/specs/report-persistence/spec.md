@@ -31,7 +31,7 @@ The system SHALL persist every accepted report to MySQL. A stored report SHALL r
 
 ### Requirement: Report history per player
 
-The system SHALL maintain a permanent count of how many reports each player has ever received. This count SHALL include reports that have expired and reports that have been dismissed. The count SHALL be readable from any backend server.
+The system SHALL maintain a permanent count of how many reports each player has ever received, stored independently of the report menu's own display. This count SHALL include reports that have expired and reports that have been dismissed. The count SHALL be readable from any backend server. This stored lifetime count is distinct from the valid report count shown on a menu entry, which reflects only the target's currently valid reports — see `report-browsing`'s Report entry information requirement.
 
 #### Scenario: Count increments on each report
 
@@ -50,8 +50,8 @@ The system SHALL maintain a permanent count of how many reports each player has 
 
 #### Scenario: Count is consistent across servers
 
-- **WHEN** a report is filed against `Steve` on `survival-1` and a staff member on `survival-2` views a report entry for `Steve`
-- **THEN** the displayed lifetime report count includes the report filed on `survival-1`
+- **WHEN** a report is filed against `Steve` on `survival-1`
+- **THEN** the recorded lifetime report count for `Steve`, read from `survival-2`, includes the report filed on `survival-1`
 
 #### Scenario: Player renamed
 

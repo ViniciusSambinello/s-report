@@ -39,7 +39,7 @@
 - [x] 4.1 Add the MySQL Connector/J and HikariCP dependencies and implement the pooled `DataSource` factory from `DatabaseConfig`.
 - [x] 4.2 Implement schema creation for `{prefix}reports`, `{prefix}report_counts`, and `{prefix}staff_settings` with the indexes defined in `design.md`, executed idempotently on first connection.
 - [x] 4.3 Implement `ReportRepository.insert` writing the report row and incrementing `report_counts` via `INSERT ... ON DUPLICATE KEY UPDATE` in a single transaction, refreshing the stored player name.
-- [x] 4.4 Implement `ReportRepository.findValid` returning reports where `dismissed_at IS NULL AND expires_at > now`, joined to their targets' lifetime counts.
+- [x] 4.4 Implement `ReportRepository.findValid` returning reports where `dismissed_at IS NULL AND expires_at > now`, with each view's report count computed in application code as the number of other currently valid reports for the same target in that result set (not the target's stored lifetime count, which stays in `report_counts` and is unaffected).
 - [x] 4.5 Implement `ReportRepository.dismiss` setting `dismissed_at` and `dismissed_by` only when the row is still valid, returning whether it actually changed a row so a second dismissal can be reported as unavailable.
 - [x] 4.6 Implement `ReportRepository.lastReportInstant` returning the reporter's most recent `created_at`, backing the network-wide submission cooldown.
 - [x] 4.7 Implement `ReportRepository.hasValidReportFrom` backing duplicate suppression for a reporter and target pair.
@@ -48,6 +48,7 @@
 - [x] 4.10 Implement the virtual-thread executor wrapper so every repository call returns a `CompletableFuture` and no call blocks a caller thread.
 - [x] 4.11 Implement connection-failure handling: log once per outage, surface an unavailable state to callers, and recover without a restart when the database returns.
 - [x] 4.12 Verify UUIDs round-trip correctly through `BINARY(16)` and that the lifetime count survives a simulated player rename. (verified in group 13's Testcontainers suite: uuidsRoundTripThroughBinary16, lifetimeCountSurvivesASimulatedPlayerRename)
+- [x] 4.13 Compute each `findValid` entry's displayed report count as the number of other currently valid reports for the same target, grouped in application code over the already-filtered result set — no window function, keeping the schema portable per design.md's MySQL 5.7/MariaDB note. The target's separate stored lifetime count in `report_counts` is untouched.
 
 ## 5. Common — Wire Protocol
 
@@ -107,7 +108,7 @@
 - [x] 10.1 Implement the custom `InventoryHolder` used as the menu identity marker.
 - [x] 10.2 Register `/reports` and `/reports <keyword>` as one Brigadier command with an optional greedy-string argument, gated on the browse permission.
 - [x] 10.3 Build the menu from `menu.yml`: title, rows, entry slots, entry material, pagination control slots and materials, and the empty-state entry.
-- [x] 10.4 Render each entry with target name, reporter name, reason, lifetime report count, resolved current server, and time remaining, substituting the offline indicator when the target is not online.
+- [x] 10.4 Render each entry with target name, reporter name, reason, valid report count, resolved current server, and time remaining, substituting the offline indicator when the target is not online.
 - [x] 10.5 Implement pagination with next and previous controls that are only actionable when a page exists in that direction, preserving the active keyword filter.
 - [x] 10.6 Apply keyword filtering through `ReportFilter` and show the empty-state entry when nothing matches.
 - [x] 10.7 Cancel every click on the menu unconditionally before dispatching on `ClickType`.
@@ -145,8 +146,9 @@
 - [x] 13.5 Round-trip and fail-closed tests for the codec, covering all frames and every malformed path.
 - [x] 13.6 Repository tests against a Testcontainers MySQL instance covering insert, valid lookup, dismissal idempotence, cooldown lookup, duplicate detection, retention, and count-survives-rename.
 - [x] 13.7 Unit-test the pending-request and pending-teleport maps for timeout expiry and correct keying.
-- [x] 13.8 Verify `./gradlew build` runs the full suite and the Checkstyle no-comment rule passes on all source. (58/58 tests passing, 0 failures/errors, all three modules build clean)
+- [x] 13.8 Verify `./gradlew build` runs the full suite and the Checkstyle no-comment rule passes on all source. (60/60 tests passing, 0 failures/errors, all three modules build clean)
 - [x] 13.9 Unit-test `ReportFilter.excludingExpired` for a mix of valid, expired, and dismissed entries. (58/58 tests passing)
+- [x] 13.10 Unit-test `ReportFilter.viewsWithValidCounts` grouping counts per target, and repository-test that dismissing one of two valid reports against the same target drops the displayed valid count for the remaining report from 2 to 1.
 
 ## 14. Verification and Delivery
 

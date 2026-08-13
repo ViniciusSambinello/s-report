@@ -154,4 +154,25 @@ class ReportRepositoryTest {
 
         assertEquals(2L, repository.lifetimeCount(targetId).get());
     }
+
+    @Test
+    void findValidReportCountDropsWhenOneOfTwoIsDismissed() throws Exception {
+        final UUID targetId = UUID.randomUUID();
+        final Report kept = newReport(targetId, "Steve", UUID.randomUUID(), Duration.ofHours(1));
+        final Report toDismiss = newReport(targetId, "Steve", UUID.randomUUID(), Duration.ofHours(1));
+        repository.insert(kept).get();
+        repository.insert(toDismiss).get();
+
+        final List<ReportView> beforeDismissal = repository.findValid(Instant.now()).get();
+        final ReportView keptBefore = beforeDismissal.stream()
+                .filter(view -> view.report().reportId().equals(kept.reportId())).findFirst().orElseThrow();
+        assertEquals(2L, keptBefore.reportCount());
+
+        repository.dismiss(toDismiss.reportId(), UUID.randomUUID(), Instant.now()).get();
+
+        final List<ReportView> afterDismissal = repository.findValid(Instant.now()).get();
+        final ReportView keptAfter = afterDismissal.stream()
+                .filter(view -> view.report().reportId().equals(kept.reportId())).findFirst().orElseThrow();
+        assertEquals(1L, keptAfter.reportCount());
+    }
 }

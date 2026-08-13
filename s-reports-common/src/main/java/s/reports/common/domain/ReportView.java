@@ -2,7 +2,7 @@ package s.reports.common.domain;
 
 import java.util.Objects;
 
-public record ReportView(Report report, long lifetimeReportCount, String resolvedServer) {
+public record ReportView(Report report, long reportCount, String resolvedServer) {
 
     public ReportView {
         Objects.requireNonNull(report, "report");

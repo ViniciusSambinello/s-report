@@ -57,15 +57,15 @@ While a staff member has the report menu open, the system SHALL periodically ref
 
 ### Requirement: Report entry information
 
-Every report entry in the menu SHALL display the target's name, the reporter's name, the report reason, the total number of reports the target has ever received, and the server the target is currently connected to. When the target is no longer online, the entry SHALL display the configured offline indicator in place of the server name.
+Every report entry in the menu SHALL display the target's name, the reporter's name, the report reason, the number of currently valid reports against the target (neither expired nor dismissed), and the server the target is currently connected to. When the target is no longer online, the entry SHALL display the configured offline indicator in place of the server name.
 
 #### Scenario: Entry shows all required fields
 
-- **WHEN** a staff member views a report entry for target `Steve`, reported by `Alex` for `using kill aura`, where `Steve` has received 7 reports in total and is on `survival-2`
+- **WHEN** a staff member views a report entry for target `Steve`, reported by `Alex` for `using kill aura`, where `Steve` has 7 currently valid reports and is on `survival-2`
 - **THEN** the entry displays the target name `Steve`
 - **AND** the entry displays the reporter name `Alex`
 - **AND** the entry displays the reason `using kill aura`
-- **AND** the entry displays a lifetime report count of 7
+- **AND** the entry displays a valid report count of 7
 - **AND** the entry displays the server `survival-2`
 
 #### Scenario: Target has disconnected
@@ -176,10 +176,11 @@ Right-clicking a report entry SHALL dismiss that report, removing it from the va
 - **WHEN** a staff member on `survival-1` dismisses a report and a staff member on `survival-2` opens the menu afterwards
 - **THEN** the dismissed report does not appear in the menu on `survival-2`
 
-#### Scenario: Dismissal preserves history
+#### Scenario: Dismissal removes the report from the displayed count
 
-- **WHEN** a report against `Steve` is dismissed and a staff member later views another report entry for `Steve`
-- **THEN** the displayed lifetime report count still includes the dismissed report
+- **WHEN** a report against `Steve` is dismissed while another valid report against `Steve` remains
+- **THEN** a staff member viewing the remaining entry for `Steve` sees a valid report count that no longer includes the dismissed report
+- **AND** the dismissed report still counts toward `Steve`'s stored lifetime report count per `report-persistence`
 
 #### Scenario: Staff lacks the dismissal permission
 

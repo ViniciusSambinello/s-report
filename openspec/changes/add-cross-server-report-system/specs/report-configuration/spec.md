@@ -84,7 +84,7 @@ The configuration SHALL expose the permission node used for each gated action: f
 
 ### Requirement: Menu configuration
 
-The configuration SHALL expose the report menu's title, its number of rows, the slots used for report entries, the slots and item types of the pagination controls, the item type and display format of a report entry, and the empty-state entry. The entry display format SHALL support placeholders for the target name, reporter name, reason, lifetime report count, target server, and time remaining before expiry.
+The configuration SHALL expose the report menu's title, its number of rows, the slots used for report entries, the slots and item types of the pagination controls, the item type and display format of a report entry, and the empty-state entry. The entry display format SHALL support placeholders for the target name, reporter name, reason, the target's valid report count, target server, and time remaining before expiry.
 
 #### Scenario: Operator changes the menu title
 
