@@ -1,0 +1,28 @@
+# s-reports Velocity-side configuration.
+# The proxy renders no player-facing text; this file only covers the
+# database connection this proxy uses and its own retention cleanup timing.
+#
+# Duration values accept a number followed by s (seconds), m (minutes),
+# h (hours), or d (days). Examples: 30s, 45m, 1h, 90d.
+
+database:
+  host: localhost
+  port: 3306
+  database: sreports
+  user: sreports
+  password: ''
+  # Maximum number of pooled JDBC connections the proxy keeps open.
+  pool-size: 5
+  # How long to wait for a new connection before giving up.
+  connection-timeout: 30s
+  # Prepended to every table name. Must match every backend server's
+  # database.table-prefix.
+  table-prefix: sreports_
+
+# How long a report is kept in storage before the proxy's retention cleanup
+# deletes it. Set to 0 to keep reports forever. Should match every backend
+# server's behaviour.retention-period.
+retention-period: 90d
+
+# How often the proxy runs its retention cleanup.
+retention-interval: 1h
