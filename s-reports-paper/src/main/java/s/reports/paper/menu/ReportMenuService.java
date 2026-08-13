@@ -2,8 +2,10 @@ package s.reports.paper.menu;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.text.Component;
@@ -35,6 +37,7 @@ public final class ReportMenuService {
     private final FrameSender frameSender;
     private final PendingResolveRegistry pendingResolveRegistry;
     private final MainThread mainThread;
+    private final Set<ReportMenuHolder> openMenus = new HashSet<>();
 
     public ReportMenuService(
             MenuConfig menuConfig,
@@ -73,6 +76,17 @@ public final class ReportMenuService {
                 openPage(holder, staff);
             }));
         });
+    }
+
+    public void untrack(ReportMenuHolder holder) {
+        openMenus.remove(holder);
+    }
+
+    public void refreshOpenMenus(Instant now) {
+        for (final ReportMenuHolder holder : openMenus) {
+            holder.setReports(ReportFilter.excludingExpired(holder.reports(), now));
+            renderPage(holder, holder.getInventory());
+        }
     }
 
     public void changePage(ReportMenuHolder holder, int delta) {
@@ -151,6 +165,7 @@ public final class ReportMenuService {
         holder.setInventory(inventory);
         renderPage(holder, inventory);
         staff.openInventory(inventory);
+        openMenus.add(holder);
     }
 
     private void renderPage(ReportMenuHolder holder, Inventory inventory) {

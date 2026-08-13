@@ -8,6 +8,7 @@ public record BehaviourConfig(
         Duration reportTtl,
         Duration retentionPeriod,
         Duration reconciliationInterval,
+        Duration menuRefreshInterval,
         Duration resolveTimeout,
         Duration pendingTeleportTimeout,
         int reasonMinLength,
@@ -21,6 +22,7 @@ public record BehaviourConfig(
         Objects.requireNonNull(reportTtl, "reportTtl");
         Objects.requireNonNull(retentionPeriod, "retentionPeriod");
         Objects.requireNonNull(reconciliationInterval, "reconciliationInterval");
+        Objects.requireNonNull(menuRefreshInterval, "menuRefreshInterval");
         Objects.requireNonNull(resolveTimeout, "resolveTimeout");
         Objects.requireNonNull(pendingTeleportTimeout, "pendingTeleportTimeout");
     }
@@ -31,6 +33,7 @@ public record BehaviourConfig(
                 accessor.getDuration("report-ttl", Duration.ofHours(1)),
                 accessor.getDuration("retention-period", Duration.ofDays(90)),
                 accessor.getDuration("reconciliation-interval", Duration.ofSeconds(60)),
+                accessor.getDuration("menu-refresh-interval", Duration.ofSeconds(1)),
                 accessor.getDuration("resolve-timeout", Duration.ofSeconds(5)),
                 accessor.getDuration("pending-teleport-timeout", Duration.ofSeconds(10)),
                 accessor.getPositiveInt("reason-min-length", 4),

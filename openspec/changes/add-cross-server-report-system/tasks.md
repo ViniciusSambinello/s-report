@@ -2,6 +2,7 @@
 
 - [x] 0.1 Create and switch to a git branch named `add-cross-server-report-system` from `main` before making any file changes.
 - [x] 0.2 Commit at the end of each numbered group below (1 through 14) on that branch; do not push to a remote unless separately requested.
+- [x] 0.3 Set the project version to `0.1.0` across `build.gradle.kts`, `paper-plugin.yml`, and the Velocity `@Plugin` annotation before the first push to the remote.
 
 ## 1. Project Scaffolding
 
@@ -114,6 +115,7 @@
 - [x] 10.9 Implement right-click: gate on the dismiss permission, dismiss through the repository, report the already-dismissed case as unavailable, refresh the open menu in place, and broadcast `ReportDismissed`.
 - [x] 10.10 Implement the invalid-slot fallback: log the offending slot and use the default layout rather than failing to enable.
 - [x] 10.11 Implement the storage-unavailable path for opening the menu without crashing the server.
+- [x] 10.12 Track every currently open report menu and run a periodic ticker on `behaviour.menu-refresh-interval` that re-renders each visible page's time-remaining text and drops entries whose reports have expired since the snapshot, without re-querying the database; stop tracking a menu on `InventoryCloseEvent`.
 
 ## 11. Paper Plugin — Teleport
 
@@ -143,7 +145,8 @@
 - [x] 13.5 Round-trip and fail-closed tests for the codec, covering all frames and every malformed path.
 - [x] 13.6 Repository tests against a Testcontainers MySQL instance covering insert, valid lookup, dismissal idempotence, cooldown lookup, duplicate detection, retention, and count-survives-rename.
 - [x] 13.7 Unit-test the pending-request and pending-teleport maps for timeout expiry and correct keying.
-- [x] 13.8 Verify `./gradlew build` runs the full suite and the Checkstyle no-comment rule passes on all source. (56/56 tests passing, 0 failures/errors, all three modules build clean)
+- [x] 13.8 Verify `./gradlew build` runs the full suite and the Checkstyle no-comment rule passes on all source. (58/58 tests passing, 0 failures/errors, all three modules build clean)
+- [x] 13.9 Unit-test `ReportFilter.excludingExpired` for a mix of valid, expired, and dismissed entries. (58/58 tests passing)
 
 ## 14. Verification and Delivery
 

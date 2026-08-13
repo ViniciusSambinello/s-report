@@ -41,7 +41,7 @@ The configuration SHALL expose the MySQL host, port, database name, user, passwo
 
 ### Requirement: Behaviour configuration
 
-The configuration SHALL expose the report submission cooldown defaulting to 30 seconds, the report time-to-live defaulting to 1 hour, the storage retention period defaulting to 90 days, the reconciliation interval, the pending cross-server teleport timeout, the minimum and maximum reason length, whether duplicate report suppression is enabled, whether the staff return position is recorded, and the default notification state for staff who have never used the toggle. Duration settings SHALL accept a human-readable form such as `30s`, `1h`, or `90d`.
+The configuration SHALL expose the report submission cooldown defaulting to 30 seconds, the report time-to-live defaulting to 1 hour, the storage retention period defaulting to 90 days, the reconciliation interval, the report menu's refresh interval defaulting to 1 second, the pending cross-server teleport timeout, the minimum and maximum reason length, whether duplicate report suppression is enabled, whether the staff return position is recorded, and the default notification state for staff who have never used the toggle. Duration settings SHALL accept a human-readable form such as `30s`, `1h`, or `90d`.
 
 #### Scenario: Default cooldown
 
@@ -52,6 +52,11 @@ The configuration SHALL expose the report submission cooldown defaulting to 30 s
 
 - **WHEN** the system starts with default configuration
 - **THEN** a filed report expires 1 hour after submission
+
+#### Scenario: Default menu refresh interval
+
+- **WHEN** the system starts with default configuration
+- **THEN** the report menu refreshes every 1 second while open
 
 #### Scenario: Operator changes the time-to-live
 

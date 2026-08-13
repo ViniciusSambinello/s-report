@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import org.bukkit.plugin.java.JavaPlugin;
 import s.reports.common.config.ConfigAccessor;
@@ -118,6 +119,10 @@ public final class SReportsPaperPlugin extends JavaPlugin {
         reconciliationService.reconcile();
         final long intervalTicks = ticksFor(config.behaviour().reconciliationInterval());
         getServer().getScheduler().runTaskTimer(this, reconciliationService::reconcile, intervalTicks, intervalTicks);
+
+        final long menuRefreshTicks = ticksFor(config.behaviour().menuRefreshInterval());
+        getServer().getScheduler().runTaskTimer(
+                this, () -> menuService.refreshOpenMenus(Instant.now()), menuRefreshTicks, menuRefreshTicks);
     }
 
     @Override

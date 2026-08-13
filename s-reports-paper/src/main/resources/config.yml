@@ -1,8 +1,8 @@
 # s-reports configuration.
 #
 # Duration values (cooldown, report-ttl, retention-period, reconciliation-interval,
-# resolve-timeout, pending-teleport-timeout, connection-timeout) accept a number
-# followed by one of: s (seconds), m (minutes), h (hours), d (days).
+# menu-refresh-interval, resolve-timeout, pending-teleport-timeout, connection-timeout)
+# accept a number followed by one of: s (seconds), m (minutes), h (hours), d (days).
 # Examples: 30s, 45m, 1h, 90d.
 
 # The name this server is registered under on the Velocity proxy. Used to tag
@@ -40,6 +40,9 @@ behaviour:
   # database, on top of refreshing on enable and on the first join after the
   # server was empty.
   reconciliation-interval: 60s
+  # How often an open /reports menu re-renders its time-remaining countdown
+  # and drops entries whose reports have expired since it was opened.
+  menu-refresh-interval: 1s
   # How long to wait for the proxy to resolve a report target before telling
   # the reporter the lookup timed out.
   resolve-timeout: 5s

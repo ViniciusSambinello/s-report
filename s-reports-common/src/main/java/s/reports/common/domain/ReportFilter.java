@@ -1,5 +1,6 @@
 package s.reports.common.domain;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,5 +17,9 @@ public final class ReportFilter {
         return reports.stream()
                 .filter(report -> report.reason().toLowerCase(Locale.ROOT).contains(needle))
                 .toList();
+    }
+
+    public static List<ReportView> excludingExpired(List<ReportView> views, Instant now) {
+        return views.stream().filter(view -> view.report().isValid(now)).toList();
     }
 }

@@ -172,7 +172,7 @@ Paper commands register through the Brigadier `LifecycleEvents.COMMANDS` lifecyc
 
 Plain Bukkit `Inventory` with a custom `InventoryHolder` used as the identity marker, so click handling never guesses from the title. Clicks are cancelled unconditionally before any action runs. `ClickType` selects behaviour: left variants teleport, right variants dismiss. Entries render as configurable items — player heads by default — with MiniMessage-formatted lore drawn from `menu.yml`.
 
-The menu snapshots its report list when opened. Dismissal mutates the snapshot and re-renders in place; it does not re-query. Reports that expire while the menu is open remain visible until reopened, and are rejected with the report-unavailable message if clicked — a deliberate simplification over live-refreshing every open inventory.
+The menu snapshots its report list when opened. Dismissal mutates the snapshot and re-renders in place; it does not re-query. A `Bukkit#runTaskTimer` ticker — mirroring the existing reconciliation ticker — runs on `behaviour.menu-refresh-interval` (default 1s) and, for every currently open menu, re-renders the visible page's time-remaining text and drops any entry whose report has expired since the snapshot was taken. The refresh filters the in-memory snapshot only; it never re-queries the database, so it never disturbs the active page or keyword filter.
 
 *Alternative considered:* a third-party GUI library. Rejected to keep the dependency set to exactly what the network already runs.
 
@@ -190,7 +190,7 @@ notification:
 
 Paper `plugins/s-reports/`:
 
-- `config.yml` — database connection, cooldown, TTL, retention, reconciliation interval, resolve and teleport timeouts, reason bounds, duplicate suppression, return-position toggle, default notification state, permission nodes.
+- `config.yml` — database connection, cooldown, TTL, retention, reconciliation interval, menu refresh interval, resolve and teleport timeouts, reason bounds, duplicate suppression, return-position toggle, default notification state, permission nodes.
 - `menu.yml` — title, rows, entry slots, entry material and format, pagination control slots and materials, empty-state entry.
 - `messages.yml` — the full message catalogue.
 
@@ -211,7 +211,7 @@ Implementation happens on a dedicated branch (`add-cross-server-report-system`) 
 - **An empty backend server receives no broadcasts.** → Database reconciliation on enable, on first join, and on a fixed interval. Correctness never depends on a frame landing; only latency does.
 - **The proxy is a single point of failure for resolution and teleports.** → Report submission degrades to a clear "cannot resolve target" message rather than writing a report against an unverified name. Browsing and dismissal continue to work, since both read from MySQL.
 - **Two independent MySQL pools (Paper and Velocity) double the connection footprint.** → Small default pool sizes, both configurable; the alternative was a payload-chunking sync protocol, which is worse.
-- **Menu snapshots go stale while open.** → Every click revalidates against storage before acting, so a stale entry produces a message, never a wrong teleport or a double dismissal.
+- **Menu snapshots can still go briefly stale between refresh ticks.** → The periodic refresh (default every 1s) drops expired entries from view, and every click additionally revalidates against storage before acting, so a stale entry in that narrow window produces a message, never a wrong teleport or a double dismissal.
 - **The no-comment Checkstyle rule is a line-anchored heuristic**, not a parser. A comment appended to the end of a code line would slip through. → Accepted; the rule catches the realistic cases and the constraint is primarily a review convention.
 - **Player-name arguments are ambiguous across a network** if two servers somehow hold the same name. → Velocity resolves by exact name against its single roster, which cannot contain duplicates.
 - **MiniMessage in configuration lets an operator author a `run_command` component pointing anywhere.** → The teleport command is permission-gated and validates the report id against storage, so a crafted component grants nothing the operator did not already have.

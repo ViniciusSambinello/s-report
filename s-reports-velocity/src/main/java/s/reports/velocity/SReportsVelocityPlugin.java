@@ -30,7 +30,7 @@ import s.reports.velocity.retention.RetentionTask;
 import s.reports.velocity.sync.SyncEchoService;
 import s.reports.velocity.teleport.TeleportService;
 
-@Plugin(id = "s-reports", name = "s-reports", version = "1.0.0")
+@Plugin(id = "s-reports", name = "s-reports", version = "0.1.0")
 public final class SReportsVelocityPlugin {
 
     private final ProxyServer proxyServer;

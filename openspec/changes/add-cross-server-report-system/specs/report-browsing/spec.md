@@ -35,6 +35,26 @@ The system SHALL provide the command `/reports` to players holding the report br
 - **WHEN** a staff member opens the menu and reports exist that have expired or been dismissed
 - **THEN** those reports do not appear in the menu
 
+### Requirement: Live menu refresh
+
+While a staff member has the report menu open, the system SHALL periodically refresh it on a configurable interval. Each refresh SHALL update the time-remaining display on every visible entry and SHALL remove any entry whose report has expired since the menu was opened, without requiring the staff member to close and reopen the menu.
+
+#### Scenario: Time remaining counts down live
+
+- **WHEN** a staff member has the report menu open and the configured refresh interval elapses
+- **THEN** the time-remaining display on every visible entry reflects the current countdown
+
+#### Scenario: An entry expires while the menu is open
+
+- **WHEN** a staff member has the report menu open and a listed report expires before the menu is closed
+- **THEN** the entry for that report is removed from the menu at the next refresh
+- **AND** the staff member is not required to reopen the menu to stop seeing it
+
+#### Scenario: Refresh preserves the current view
+
+- **WHEN** the menu refreshes while a staff member is viewing a page with an active keyword filter
+- **THEN** the staff member's current page and active keyword filter remain unchanged after the refresh
+
 ### Requirement: Report entry information
 
 Every report entry in the menu SHALL display the target's name, the reporter's name, the report reason, the total number of reports the target has ever received, and the server the target is currently connected to. When the target is no longer online, the entry SHALL display the configured offline indicator in place of the server name.
