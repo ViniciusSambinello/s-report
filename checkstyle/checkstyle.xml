@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+  s-reports Java source may carry no comments: every name must explain itself,
+  and any explanatory text belongs in a .yml file instead. This ruleset fails
+  the build on a line whose first non-whitespace characters open or continue a
+  comment. Anchoring the pattern to the start of the line (after whitespace) is
+  what lets a string literal such as "jdbc:mysql://host" pass unflagged, since
+  that occurrence of "//" is not the first thing on its line.
+-->
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+
+    <module name="TreeWalker">
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="^\s*(//|/\*|\*/|\*)"/>
+            <property name="ignoreComments" value="false"/>
+            <property name="message"
+                      value="Java source files may not contain comments; put explanatory text in a .yml configuration file instead."/>
+        </module>
+    </module>
+</module>
