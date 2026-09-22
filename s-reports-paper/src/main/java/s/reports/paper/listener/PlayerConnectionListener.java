@@ -12,22 +12,26 @@ import s.reports.paper.message.MessageService;
 import s.reports.paper.notification.StaffSettingsCache;
 import s.reports.paper.reconciliation.ReconciliationService;
 import s.reports.paper.teleport.PendingTeleportRegistry;
+import s.reports.paper.teleport.ReturnPositionRegistry;
 
 public final class PlayerConnectionListener implements Listener {
 
     private final ReconciliationService reconciliationService;
     private final StaffSettingsCache staffSettingsCache;
     private final PendingTeleportRegistry pendingTeleportRegistry;
+    private final ReturnPositionRegistry returnPositionRegistry;
     private final MessageService messageService;
 
     public PlayerConnectionListener(
             ReconciliationService reconciliationService,
             StaffSettingsCache staffSettingsCache,
             PendingTeleportRegistry pendingTeleportRegistry,
+            ReturnPositionRegistry returnPositionRegistry,
             MessageService messageService) {
         this.reconciliationService = reconciliationService;
         this.staffSettingsCache = staffSettingsCache;
         this.pendingTeleportRegistry = pendingTeleportRegistry;
+        this.returnPositionRegistry = returnPositionRegistry;
         this.messageService = messageService;
     }
 
@@ -43,7 +47,9 @@ public final class PlayerConnectionListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        staffSettingsCache.forget(event.getPlayer().getUniqueId());
+        final var playerId = event.getPlayer().getUniqueId();
+        staffSettingsCache.forget(playerId);
+        returnPositionRegistry.clear(playerId);
     }
 
     private void completePendingTeleport(Player player) {
