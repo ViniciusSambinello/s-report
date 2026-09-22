@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import s.reports.common.config.ConfigAccessor;
 import s.reports.common.config.ConfigLoadOutcome;
@@ -59,6 +61,7 @@ public final class SReportsPaperPlugin extends JavaPlugin {
             return;
         }
         final PaperConfig config = ((ConfigLoadOutcome.Ready<PaperConfig>) configOutcome).value();
+        registerDefaultPermissions(config);
         final MenuConfig menuConfig = loadMenuConfig();
         final Map<String, Object> messages = loadMessages();
 
@@ -108,7 +111,9 @@ public final class SReportsPaperPlugin extends JavaPlugin {
                 config.permissions().exempt()));
 
         getServer().getPluginManager().registerEvents(
-                new PlayerConnectionListener(reconciliationService, staffSettingsCache, pendingTeleportRegistry, messageService), this);
+                new PlayerConnectionListener(
+                        reconciliationService, staffSettingsCache, pendingTeleportRegistry, returnPositionRegistry, messageService),
+                this);
         getServer().getPluginManager().registerEvents(new ReportMenuListener(menuService, teleportFlowService), this);
 
         ReportCommand.register(this, submissionService);
@@ -132,6 +137,35 @@ public final class SReportsPaperPlugin extends JavaPlugin {
         }
         if (dataSource != null) {
             dataSource.close();
+        }
+    }
+
+    /**
+     * s-reports checks its permission nodes dynamically (Player#hasPermission with a
+     * config-driven node name), so paper-plugin.yml declares no static permissions:
+     * section. Registering them here makes the currently configured nodes discoverable
+     * to permission-management plugins and gives them a predictable, explicit default
+     * (op-only, matching Bukkit's implicit default for unknown nodes) instead of being
+     * entirely invisible to admin tooling.
+     */
+    private void registerDefaultPermissions(PaperConfig config) {
+        final var pluginManager = getServer().getPluginManager();
+        for (final String node : new String[] {
+                config.permissions().report(),
+                config.permissions().cooldownBypass(),
+                config.permissions().exempt(),
+                config.permissions().browse(),
+                config.permissions().dismiss(),
+                config.permissions().notifyPermission()
+        }) {
+            if (pluginManager.getPermission(node) != null) {
+                continue;
+            }
+            try {
+                pluginManager.addPermission(new Permission(node, PermissionDefault.OP));
+            } catch (IllegalArgumentException exception) {
+                // Already registered by another plugin in this exact form; leave it alone.
+            }
         }
     }
 
