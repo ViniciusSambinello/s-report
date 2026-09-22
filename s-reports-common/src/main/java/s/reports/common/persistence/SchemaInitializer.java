@@ -1,6 +1,8 @@
 package s.reports.common.persistence;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.sql.DataSource;
@@ -48,14 +50,47 @@ public final class SchemaInitializer {
             ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci
             """;
 
+    private static final String REPORTER_TARGET_VALID_INDEX_NAME = "idx_reporter_target_valid";
+
     private SchemaInitializer() {
     }
 
     public static void initialize(DataSource dataSource, String tablePrefix) throws SQLException {
-        try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement()) {
-            statement.executeUpdate(REPORTS_TABLE.formatted(tablePrefix));
-            statement.executeUpdate(REPORT_COUNTS_TABLE.formatted(tablePrefix));
-            statement.executeUpdate(STAFF_SETTINGS_TABLE.formatted(tablePrefix));
+        try (Connection connection = dataSource.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                statement.executeUpdate(REPORTS_TABLE.formatted(tablePrefix));
+                statement.executeUpdate(REPORT_COUNTS_TABLE.formatted(tablePrefix));
+                statement.executeUpdate(STAFF_SETTINGS_TABLE.formatted(tablePrefix));
+            }
+            ensureReporterTargetValidIndexExists(connection, tablePrefix);
+        }
+    }
+
+    private static void ensureReporterTargetValidIndexExists(Connection connection, String tablePrefix) throws SQLException {
+        final String reportsTableName = tablePrefix + "reports";
+        if (indexExists(connection, reportsTableName, REPORTER_TARGET_VALID_INDEX_NAME)) {
+            return;
+        }
+        final String createIndexSql = "CREATE INDEX `" + REPORTER_TARGET_VALID_INDEX_NAME + "` ON `" + reportsTableName + "`"
+                + " (`reporter_uuid`, `target_uuid`, `dismissed_at`, `expires_at`)";
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(createIndexSql);
+        } catch (SQLException exception) {
+            if (!indexExists(connection, reportsTableName, REPORTER_TARGET_VALID_INDEX_NAME)) {
+                throw exception;
+            }
+        }
+    }
+
+    private static boolean indexExists(Connection connection, String tableName, String indexName) throws SQLException {
+        final String sql = "SELECT 1 FROM information_schema.statistics"
+                + " WHERE table_schema = DATABASE() AND table_name = ? AND index_name = ? LIMIT 1";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, tableName);
+            statement.setString(2, indexName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next();
+            }
         }
     }
 }
