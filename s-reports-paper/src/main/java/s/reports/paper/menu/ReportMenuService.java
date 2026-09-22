@@ -224,9 +224,6 @@ public final class ReportMenuService {
     private Component renderMenuText(String template, Map<String, String> placeholders) {
         String rendered = template;
         for (final Map.Entry<String, String> entry : placeholders.entrySet()) {
-            // Escape MiniMessage tag syntax in placeholder values (reason, target/reporter
-            // names) before substitution: these can be fully player-controlled and must
-            // never be re-parsed as components inside the rendered lore/name.
             rendered = rendered.replace("%" + entry.getKey() + "%", MiniMessage.miniMessage().escapeTags(entry.getValue()));
         }
         return MiniMessage.miniMessage().deserialize(rendered);

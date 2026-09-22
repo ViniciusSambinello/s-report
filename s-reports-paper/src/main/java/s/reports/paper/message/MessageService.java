@@ -43,11 +43,6 @@ public final class MessageService {
         }
         String rendered = String.valueOf(raw);
         for (final Map.Entry<String, String> entry : placeholders.entrySet()) {
-            // Placeholder values (e.g. a report's reason, or a player-chosen name) are
-            // untrusted free text. Escape any MiniMessage tag syntax they contain before
-            // splicing them into the template so they render as literal text instead of
-            // being parsed as components (which could otherwise forge <click>/<hover>
-            // elements shown to staff).
             rendered = rendered.replace("%" + entry.getKey() + "%", miniMessage.escapeTags(entry.getValue()));
         }
         return rendered;

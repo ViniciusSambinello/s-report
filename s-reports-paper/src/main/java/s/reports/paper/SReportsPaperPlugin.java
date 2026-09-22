@@ -140,14 +140,6 @@ public final class SReportsPaperPlugin extends JavaPlugin {
         }
     }
 
-    /**
-     * s-reports checks its permission nodes dynamically (Player#hasPermission with a
-     * config-driven node name), so paper-plugin.yml declares no static permissions:
-     * section. Registering them here makes the currently configured nodes discoverable
-     * to permission-management plugins and gives them a predictable, explicit default
-     * (op-only, matching Bukkit's implicit default for unknown nodes) instead of being
-     * entirely invisible to admin tooling.
-     */
     private void registerDefaultPermissions(PaperConfig config) {
         final var pluginManager = getServer().getPluginManager();
         for (final String node : new String[] {
@@ -164,7 +156,6 @@ public final class SReportsPaperPlugin extends JavaPlugin {
             try {
                 pluginManager.addPermission(new Permission(node, PermissionDefault.OP));
             } catch (IllegalArgumentException exception) {
-                // Already registered by another plugin in this exact form; leave it alone.
             }
         }
     }
