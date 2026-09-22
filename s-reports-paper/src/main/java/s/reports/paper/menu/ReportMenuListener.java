@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import s.reports.common.domain.ReportView;
 import s.reports.paper.teleport.TeleportFlowService;
 
@@ -54,6 +55,13 @@ public final class ReportMenuListener implements Listener {
             teleportFlowService.requestTeleport(player, view.report().reportId());
         } else if (event.getClick().isRightClick()) {
             menuService.dismiss(player, holder, view.report().reportId());
+        }
+    }
+
+    @EventHandler
+    public void onDrag(InventoryDragEvent event) {
+        if (event.getInventory().getHolder() instanceof ReportMenuHolder) {
+            event.setCancelled(true);
         }
     }
 
